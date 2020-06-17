@@ -6,6 +6,8 @@ import numpy as np
 from model import Model, ModelParams, UnsetParams
 import learner
 
+# Currently set up to use data from Microsoft's HalfMoons dataset:
+# https://github.com/microsoft/Quantum/tree/master/samples/machine-learning/half-moons
 with open(sys.argv[1]) as jf:
     data = json.load(jf)["TrainingData"]
 
