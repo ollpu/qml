@@ -5,6 +5,7 @@ import numpy as np
 
 from model import Model, ModelParams, UnsetParams
 import learner
+import export
 
 # Currently set up to use data from Microsoft's HalfMoons dataset:
 # https://github.com/microsoft/Quantum/tree/master/samples/machine-learning/half-moons
@@ -67,6 +68,8 @@ for repi in range(5):
     print(tparams.cost)
     tparams.params += np.random.normal(0, 1, tparams.params.shape)
 print(params.cost)
+
+export.write_qs(params)
 
 Yc = params.classify(X)
 
