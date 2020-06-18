@@ -15,7 +15,14 @@ def IU(n):
 
 def rot_gate(pauli, theta, diff=False):
     if diff:
-        return rot_gate(pauli, theta+np.pi)/2
+        dsint = np.cos(theta/2)/2
+        dcost = -np.sin(theta/2)/2
+        if pauli == 'X':
+            mat = [[dcost, -1j*dsint], [-1j*dsint, dcost]]
+        elif pauli == 'Y':
+            mat = [[dcost, -dsint], [dsint, dcost]]
+        elif pauli == 'Z':
+            mat = [[-0.5j*np.exp(-0.5j*theta), 0], [0, 0.5j*np.exp(0.5j*theta)]]
     else:
         sint = np.sin(theta/2)
         cost = np.cos(theta/2)
@@ -25,4 +32,4 @@ def rot_gate(pauli, theta, diff=False):
             mat = [[cost, -sint], [sint, cost]]
         elif pauli == 'Z':
             mat = [[np.exp(-0.5j*theta), 0], [0, np.exp(0.5j*theta)]]
-        return np.array(mat, p_dtype)
+    return np.array(mat, p_dtype)

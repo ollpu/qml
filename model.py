@@ -25,6 +25,9 @@ class ModelParams:
     def new_with(self, params, cost=None):
         return ModelParams(self.model, params, cost)
 
+    def copy(self):
+        return ModelParams(self.model, self.params.copy(), self.cost)
+
     def normalize_input(self, st):
         st = np.array(st, np.complex128)
         dc_in = st.shape[-1]
@@ -33,7 +36,10 @@ class ModelParams:
                 st = np.pad(st, (0, self.dc-dc_in), mode='constant')
             else:
                 st = np.pad(st, ((0, 0), (0, self.dc-dc_in)), mode='constant')
-        st /= np.linalg.norm(st, axis=-1)[:,None]
+        if len(st.shape) == 1:
+            st /= np.linalg.norm(st)
+        else:
+            st /= np.linalg.norm(st, axis=-1)[:,None]
         return st
 
     def predict(self, X):
@@ -77,7 +83,7 @@ class ModelParams:
         gr_l[..., :self.dc//2] = 0
         result = []
         for u, ud in zip(reversed(unitaries), reversed(unitaries_diff)):
-            result.append(np.real(np.sum(ud*gr_l, axis=-1)))
+            result.append(np.real(np.sum(ud*np.conj(gr_l), axis=-1)))
             gr_l = np.conj(np.conj(gr_l) @ u)
         result.reverse()
         result.append(np.full(st.shape[-2:-1], 1.))
