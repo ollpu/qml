@@ -6,10 +6,13 @@ cost_power = 10
 def cost(Y, Yp):
     return np.sum(np.power(Y-Yp, cost_power))/cost_power
 
+def cost_gradient(Y, Yp):
+    return np.power(Yp - Y, cost_power-1)
+
 def gradient(mp, X, Y):
     sc = len(X)
     Yp, grad = mp.gradient(X)
-    step = np.sum(np.power(Yp - Y, cost_power-1)*grad, axis=1)
+    step = np.sum(cost_gradient(Y, Yp)*grad, axis=1)
     step /= np.linalg.norm(step)
     return step, Yp
 
