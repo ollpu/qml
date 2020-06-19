@@ -18,12 +18,15 @@ def gradient(mp, X, Y):
 def learn(mp, X, Y, lrate=0.3, rep=1000, beta1=0.9, beta2=0.999, eps=1e-4):
     X = mp.normalize_input(X)
     Y = np.array(Y, dtype=np.float64)
-    costs = np.zeros(rep)
+    costs = np.zeros(rep + 1)
     best = mp
     m = np.zeros_like(mp.params)
     v = np.zeros_like(mp.params)
     for repi in range(rep):
         step, Yp = gradient(mp, X, Y)
+        mp.cost = cost(Y, Yp)
+        if mp.cost < best.cost: best = mp
+        costs[repi] = mp.cost
         
         # Adam optimizer
         m = beta1 * m + (1 - beta1) * step
@@ -33,8 +36,9 @@ def learn(mp, X, Y, lrate=0.3, rep=1000, beta1=0.9, beta2=0.999, eps=1e-4):
         step = m_hat / (np.sqrt(v_hat) + eps)
         
         mp = mp.new_with(mp.params - lrate * step)
-        Yp = mp.predict(X)
-        mp.cost = cost(Y, Yp)
-        if mp.cost < best.cost: best = mp
-        costs[repi] = mp.cost
+    
+    Yp = mp.predict(X)
+    mp.cost = cost(Y, Yp)
+    if mp.cost < best.cost: best = mp
+    costs[rep] = mp.cost
     return best, costs
