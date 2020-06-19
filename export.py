@@ -11,6 +11,7 @@ def serialize_qs(mp):
 namespace Solution {{
     open Microsoft.Quantum.MachineLearning;
     
+    // Cost {mp.cost}
     operation Solve () : (ControlledRotation[], (Double[], Double)) {{
         return (
             [
