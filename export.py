@@ -5,7 +5,7 @@ def serialize_qs(mp):
     for i, (ctl, pauli, trg) in enumerate(mp.model.structure):
         if len(ctl) == 0:
             ctl = "new Int[0]"
-        structure.append(f"ControlledRotation({trg}, {ctl}, Pauli{pauli}, {i}),")
+        structure.append(f"ControlledRotation(({trg}, {ctl}), Pauli{pauli}, {i}),")
     structure = ("\n" + " "*16).join(structure)
     return f"""
 namespace Solution {{
