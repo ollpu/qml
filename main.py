@@ -64,7 +64,7 @@ tparams.params[-1] = np.random.rand(1)-0.5
 cost_evolution = []
 
 for repi in range(5):
-    tparams, one_ce = learner.learn(tparams, X, Y, 0.1, 1000)
+    tparams, one_ce = learner.learn(tparams, X, Y, 0.01, 1000)
     cost_evolution.append(one_ce)
     if tparams.cost < params.cost: params = tparams.copy()
     print(tparams.cost)

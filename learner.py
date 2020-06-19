@@ -13,6 +13,7 @@ def gradient(mp, X, Y):
     sc = len(X)
     grad, Yp = mp.gradient(X)
     step = np.sum(cost_gradient(Y, Yp)*grad, axis=1)
+    step /= np.linalg.norm(step)
     return step, Yp
 
 def learn(mp, X, Y, lrate=0.3, rep=1000, beta1=0.9, beta2=0.999, eps=1e-4):
