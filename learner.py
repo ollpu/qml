@@ -4,21 +4,21 @@ from lib import *
 cost_power = 10
 
 def cost(Y, Yp):
-    return np.sum(np.power(Y-Yp, cost_power))/cost_power
+    return np.sum(np.power(np.abs(Y-Yp), cost_power))/cost_power
 
 def cost_gradient(Y, Yp):
-    return np.power(Yp - Y, cost_power-1)
+    return np.power(np.abs(Y-Yp), cost_power-1) * np.sign(Yp-Y)
 
 def gradient(mp, X, Y):
     sc = len(X)
     Yp, grad = mp.gradient(X)
     step = np.sum(cost_gradient(Y, Yp)*grad, axis=1)
-    step /= np.linalg.norm(step)
     return step, Yp
 
 def learn(mp, X, Y, lrate=0.3, rep=1000, beta1=0.9, beta2=0.999, eps=1e-4):
     X = mp.normalize_input(X)
     Y = np.array(Y, dtype=np.float64)
+    costs = np.zeros(rep)
     best = mp
     m = np.zeros_like(mp.params)
     v = np.zeros_like(mp.params)
@@ -33,6 +33,8 @@ def learn(mp, X, Y, lrate=0.3, rep=1000, beta1=0.9, beta2=0.999, eps=1e-4):
         step = m_hat / (np.sqrt(v_hat) + eps)
         
         mp = mp.new_with(mp.params - lrate * step)
+        Yp = mp.predict(X)
         mp.cost = cost(Y, Yp)
         if mp.cost < best.cost: best = mp
-    return best
+        costs[repi] = mp.cost
+    return best, costs
