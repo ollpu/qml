@@ -89,7 +89,7 @@ class ModelParams:
         result.append(np.full(st.shape[-2:-1], 1.))
         result = np.array(result)
         p1 = np.square(np.linalg.norm(st[..., self.dc//2:], axis=-1))
-        return (p1 + self.params[-1], result)
+        return result, p1 + self.params[-1]
 
 class UnsetParams:
     def __init__(self):

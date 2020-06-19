@@ -61,9 +61,11 @@ model = Model(2, struct)
 params = UnsetParams()
 tparams = ModelParams(model, 2*np.pi*np.random.rand(len(model.structure)+1))
 tparams.params[-1] = np.random.rand(1)-0.5
+cost_evolution = []
 
 for repi in range(5):
-    tparams = learner.learn(tparams, X, Y, 0.01, 1000)
+    tparams, one_ce = learner.learn(tparams, X, Y, 0.1, 1000)
+    cost_evolution.append(one_ce)
     if tparams.cost < params.cost: params = tparams.copy()
     print(tparams.cost)
     tparams.params += np.random.normal(0, 1, tparams.params.shape)
@@ -80,8 +82,12 @@ mz = np.reshape(params.predict(mf), mx.shape)
 plt.subplot(2, 1, 1)
 plt.contourf(mx, my, mz, np.linspace(0, 1, 11), cmap="PiYG", extend="both")
 plt.colorbar()
+plt.contour(mx, my, mz, [0.5])
 plt.scatter(x, y, c=Yc)
 plt.subplot(2, 1, 2)
-plt.scatter(x, y, c=Y)
+for i, one_ce in enumerate(cost_evolution):
+    plt.plot(np.log(one_ce), label=f"Start {i}")
+plt.legend()
+# plt.scatter(x, y, c=Y)
 plt.show()
 

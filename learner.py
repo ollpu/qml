@@ -11,7 +11,7 @@ def cost_gradient(Y, Yp):
 
 def gradient(mp, X, Y):
     sc = len(X)
-    Yp, grad = mp.gradient(X)
+    grad, Yp = mp.gradient(X)
     step = np.sum(cost_gradient(Y, Yp)*grad, axis=1)
     return step, Yp
 
